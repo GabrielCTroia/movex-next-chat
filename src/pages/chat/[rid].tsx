@@ -11,8 +11,9 @@ export default function () {
   const router = useRouter();
   const { rid, slot } = router.query;
 
+  // If the given "rid" query param isn't an actual rid of type "chat"
   if (!isRidOfType('chat', rid)) {
-    return null;
+    return <div>Error - Rid not valid</div>;
   }
 
   return (
@@ -21,6 +22,9 @@ export default function () {
         movexDefinition={movexConfig}
         rid={rid}
         render={({ boundResource: { state, dispatch } }) => {
+          // If there is a given slot just show the ChatBox
+          // Otherwise allow the User to pick one
+
           if (slot) {
             return (
               <ChatBoxContainer

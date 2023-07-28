@@ -1,11 +1,11 @@
 import { useMovexResourceType } from 'movex-react';
 import { initialChatState } from '@/modules/chat/reducer';
-import movexConfig from '@/movex.config';
 import { toRidAsStr } from 'movex';
 import { ChatOnboarding } from '@/modules/chat/ChatOnboarding';
 import { useRouter } from 'next/router';
+import movexConfig from '@/movex.config';
 
-export default function Home() {
+export default function () {
   const chatResource = useMovexResourceType(movexConfig, 'chat');
   const router = useRouter();
 

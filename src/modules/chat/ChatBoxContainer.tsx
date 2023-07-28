@@ -15,7 +15,6 @@ export const ChatBoxContainer: React.FC<Props> = ({
 }) => {
   useEffect(() => {
     // Join as soon as the component mounts
-    // This behavior can be changed per use case of course.
     dispatch({
       type: 'join',
       payload: {

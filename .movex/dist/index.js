@@ -29,7 +29,7 @@ var userSlots = {
   pink: true,
   red: true,
   blue: true,
-  yellow: true,
+  purple: true,
   green: true,
   orange: true
 };
