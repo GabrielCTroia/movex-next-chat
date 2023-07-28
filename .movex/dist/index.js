@@ -24,7 +24,7 @@ __export(movex_config_exports, {
 });
 module.exports = __toCommonJS(movex_config_exports);
 
-// src/modules/chat/movex.ts
+// src/modules/chat/reducer.ts
 var userSlots = {
   pink: true,
   red: true,
@@ -37,7 +37,7 @@ var initialChatState = {
   userSlots,
   messages: []
 };
-var reducer = (state = initialChatState, action) => {
+var reducer_default = (state = initialChatState, action) => {
   if (action.type === "join") {
     return {
       ...state,
@@ -68,6 +68,6 @@ var reducer = (state = initialChatState, action) => {
 var movex_config_default = {
   url: "localhost:3333",
   resources: {
-    chat: reducer
+    chat: reducer_default
   }
 };

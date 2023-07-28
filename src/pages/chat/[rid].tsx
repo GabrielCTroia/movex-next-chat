@@ -1,55 +1,52 @@
 import { MovexBoundResource } from 'movex-react';
-import { Main } from '@/modules/chat/Main';
+import { ChatBoxContainer } from '@/modules/chat/ChatBoxContainer';
 import { useRouter } from 'next/router';
-import { isRidOfType, toRidAsStr } from 'movex';
+import { isRidOfType } from 'movex';
 import { ChatOnboarding } from '@/modules/chat/ChatOnboarding';
 import { objectKeys } from 'movex-core-util';
-import { UserSlots } from '@/modules/chat/movex';
+import { UserSlot } from '@/modules/chat/reducer';
 import movexConfig from '@/movex.config';
 
-export default function Home() {
-  const { rid, slot } = useRouter().query;
+export default function () {
+  const router = useRouter();
+  const { rid, slot } = router.query;
 
   if (!isRidOfType('chat', rid)) {
     return null;
   }
 
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24`}
-    >
+    <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-slate-600">
       <MovexBoundResource
         movexDefinition={movexConfig}
         rid={rid}
-        render={({ boundResource }) => {
+        render={({ boundResource: { state, dispatch } }) => {
           if (slot) {
             return (
-              <Main
-                userSlot={slot as UserSlots}
-                boundChatResource={boundResource}
+              <ChatBoxContainer
+                userSlot={slot as UserSlot}
+                state={state}
+                dispatch={dispatch}
               />
             );
           }
 
           // Filter out the taken User Slots
-          const availableUserSlots = objectKeys(
-            boundResource.state.userSlots
-          ).reduce(
+          const availableUserSlots = objectKeys(state.userSlots).reduce(
             (accum, nextSlot) =>
-              boundResource.state.userSlots[nextSlot]
-                ? [...accum, nextSlot]
-                : accum,
-            [] as UserSlots[]
+              state.userSlots[nextSlot] ? [...accum, nextSlot] : accum,
+            [] as UserSlot[]
           );
 
           return (
             <ChatOnboarding
               slots={availableUserSlots}
               onSubmit={(slot) => {
-                // Redirect to the same page with the userSlot
-                window.location.href = `${
-                  window.location.origin
-                }/chat/${toRidAsStr(rid)}?slot=${slot}`;
+                // Redirect to the same page with the selected  userSlot
+                router.push({
+                  pathname: router.asPath,
+                  query: { slot },
+                });
               }}
             />
           );

@@ -1,21 +1,18 @@
-import { useEffect } from 'react';
-import { MovexBoundResourceFromConfig } from 'movex-react';
+import { Dispatch, useEffect } from 'react';
 import { ChatBox } from './ChatBox';
-import { ResourceIdentifierStr, toRidAsStr } from 'movex';
-import { userSlots } from './movex';
-import movexConfig from '../../movex.config';
+import { ChatActions, ChatState, UserSlot } from './reducer';
 
 type Props = {
-  boundChatResource: MovexBoundResourceFromConfig<
-    (typeof movexConfig)['resources'],
-    'chat'
-  >;
-  userSlot: keyof typeof userSlots;
+  userSlot: UserSlot;
+  state: ChatState;
+  dispatch: Dispatch<ChatActions>;
 };
 
-export const Main: React.FC<Props> = ({ boundChatResource, userSlot }) => {
-  const { state, dispatch, rid } = boundChatResource;
-
+export const ChatBoxContainer: React.FC<Props> = ({
+  dispatch,
+  state,
+  userSlot,
+}) => {
   useEffect(() => {
     // Join as soon as the component mounts
     // This behavior can be changed per use case of course.
@@ -41,7 +38,6 @@ export const Main: React.FC<Props> = ({ boundChatResource, userSlot }) => {
     <ChatBox
       messages={state.messages}
       userSlot={userSlot}
-      ridAsStr={toRidAsStr(rid) as ResourceIdentifierStr<'chat'>}
       onSubmit={(msg) => {
         // Submit the message to Movex
         dispatch({

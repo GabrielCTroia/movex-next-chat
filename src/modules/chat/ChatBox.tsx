@@ -1,20 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ChatMsg, userSlots } from './movex';
-import { ResourceIdentifierStr } from 'movex';
+import { ChatMsg, UserSlot } from './reducer';
+import { useRouter } from 'next/router';
 
 type Props = {
-  userSlot: keyof typeof userSlots;
+  userSlot: UserSlot;
   messages: ChatMsg[];
   onSubmit: (msg: ChatMsg) => void;
-  ridAsStr: ResourceIdentifierStr<'chat'>;
 };
 
-export const ChatBox: React.FC<Props> = ({
-  userSlot,
-  messages,
-  ridAsStr,
-  onSubmit,
-}) => {
+export const ChatBox: React.FC<Props> = ({ userSlot, messages, onSubmit }) => {
+  const router = useRouter();
   const [msg, setMsg] = useState<string>();
 
   const submit = useCallback(() => {
@@ -46,7 +41,7 @@ export const ChatBox: React.FC<Props> = ({
   }, [inviteCopied]);
 
   return (
-    <div className="flex">
+    <div className="flex text-slate-900">
       <div
         style={{
           height: 600,
@@ -75,11 +70,9 @@ export const ChatBox: React.FC<Props> = ({
           {messagesInDescOrder.map((msg) => (
             <div
               key={msg.atTimestamp}
-              className="p-3 pt-2 pb-2 border-solid border-t border-slate-300 last:border-none"
-              style={{
-                // borderBottom: '1px solid #ccc',
-                textAlign: msg.userSlot === userSlot ? 'right' : 'left',
-              }}
+              className={`p-3 pt-2 pb-2 border-solid border-t border-slate-300 last:border-none ${
+                msg.userSlot === userSlot && 'text-right'
+              }`}
             >
               <div>{msg.content}</div>
 
@@ -95,7 +88,6 @@ export const ChatBox: React.FC<Props> = ({
           onChange={(e) => setMsg(e.target.value)}
           className="p-2 w-full rounded-lg"
           style={{
-            border: '1px solid #ddd',
             height: '60px',
           }}
         />
@@ -103,8 +95,13 @@ export const ChatBox: React.FC<Props> = ({
           <button
             className="bg-green-300 hover:bg-green-500 text-black font-bold py-2 px-4 rounded-lg"
             onClick={() => {
+              const pathWithoutQuery = router.asPath.slice(
+                0,
+                router.asPath.indexOf('?')
+              );
+
               navigator.clipboard.writeText(
-                `${window.location.origin}/chat/${ridAsStr}`
+                window.location.origin + pathWithoutQuery
               );
 
               setInviteCopied(true);

@@ -17,6 +17,7 @@
     "eslint": "8.45.0",
     "eslint-config-next": "13.4.12",
     "movex": "^0.1.2",
+    "movex-core-util": "^0.1.2",
     "movex-react": "^0.1.2",
     "next": "13.4.12",
     "postcss": "8.4.27",

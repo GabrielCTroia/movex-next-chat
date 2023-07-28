@@ -1,4 +1,4 @@
-import { reducer as chatReducer } from './modules/chat/movex';
+import chatReducer from './modules/chat/reducer';
 
 export default {
   url: 'localhost:3333',

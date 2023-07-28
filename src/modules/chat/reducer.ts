@@ -1,8 +1,16 @@
-import { Action } from 'movex';
+type Action<
+  TType extends string,
+  TPayload = undefined
+> = TPayload extends undefined
+  ? {
+      type: TType;
+    }
+  : {
+      type: TType;
+      payload: TPayload;
+    };
 
-/**
- * Define the State Type and the Initial State Value
- */
+// PART 1: State Type and Initial State Value
 
 export const userSlots = {
   pink: true,
@@ -13,17 +21,17 @@ export const userSlots = {
   orange: true,
 };
 
-export type UserSlots = keyof typeof userSlots;
+export type UserSlot = keyof typeof userSlots;
 
 export type ChatMsg = {
   content: string;
   atTimestamp: number;
-  userSlot: UserSlots;
+  userSlot: UserSlot;
 };
 
 export type ChatState = {
   userSlots: {
-    [slot in UserSlots]: boolean;
+    [slot in UserSlot]: boolean;
   };
   messages: ChatMsg[];
 };
@@ -33,42 +41,33 @@ export const initialChatState: ChatState = {
   messages: [],
 };
 
-/**
- * Type all the Actions that affect the state
- */
+// PART 2: Action Types
+
 export type ChatActions =
   | Action<
       'join',
       {
-        userSlot: UserSlots;
+        userSlot: UserSlot;
       }
     >
   | Action<
       'leave',
       {
-        userSlot: UserSlots;
+        userSlot: UserSlot;
       }
     >
   | Action<
       'submit',
       {
-        userSlot: UserSlots;
+        userSlot: UserSlot;
         content: string;
         atTimestamp: number;
       }
     >;
 
-/**
- * The Chat Reducer. This is where all the logic happens
- *
- * @param state
- * @param action
- * @returns
- */
-export const reducer = (
-  state = initialChatState,
-  action: ChatActions
-): ChatState => {
+// PART 3: The Reducer – This is where all the logic happens
+
+export default (state = initialChatState, action: ChatActions): ChatState => {
   // User Joins
   if (action.type === 'join') {
     return {
@@ -78,7 +77,7 @@ export const reducer = (
         [action.payload.userSlot]: false,
       },
     };
-  } 
+  }
   // User Leaves
   else if (action.type === 'leave') {
     return {
